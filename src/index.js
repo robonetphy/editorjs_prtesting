@@ -1,17 +1,49 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import EditorJS from "@editorjs/editorjs";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import { EDITOR_JS_TOOLS } from "./constants";
+
+class App extends Component {
+  async onSave() {
+    const outputData = await this.editorInstance.save();
+    console.log("outputData", outputData);
+  }
+
+  render() {
+    return (
+      <>
+        <button onClick={this.onSave.bind(this)} type="button">
+          Save Content (check console output)
+        </button>
+        <EditorJS
+          editorInstance={instance => (this.editorInstance = instance)}
+          tools={EDITOR_JS_TOOLS}
+          data={{
+            time: 1556098174501,
+            blocks: [
+
+              {
+                type: "customReact",
+                data: {
+                  text: "custom element"
+                }
+              },
+              {
+                type: "customJs",
+                data: {
+                  text: "custom element"
+                }
+              }
+            ],
+            version: "2.15.1"
+          }}
+        />
+      </>
+    );
+  }
+}
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
